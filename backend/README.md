@@ -19,15 +19,16 @@ run, and use the application.
 3. [Starting the application](#3-starting-the-application)
 4. [Confirming it's running](#4-confirming-its-running)
 5. [Using the application, step by step](#5-using-the-application-step-by-step)
-6. [Understanding the output](#6-understanding-the-output)
-7. [Try it without your own code](#7-try-it-without-your-own-code)
-8. [Enabling AI-assisted extraction (optional)](#8-enabling-ai-assisted-extraction-optional)
-9. [Configuration reference](#9-configuration-reference)
-10. [Advanced / optional features](#10-advanced--optional-features)
-11. [Running the automated tests](#11-running-the-automated-tests)
-12. [Troubleshooting](#12-troubleshooting)
-13. [Project layout](#13-project-layout)
-14. [Architecture reference](#14-architecture-reference)
+6. [Frontend integration guide](#6-frontend-integration-guide)
+7. [Understanding the output](#7-understanding-the-output)
+8. [Try it without your own code](#8-try-it-without-your-own-code)
+9. [Enabling AI-assisted extraction (optional)](#9-enabling-ai-assisted-extraction-optional)
+10. [Configuration reference](#10-configuration-reference)
+11. [Advanced / optional features](#11-advanced--optional-features)
+12. [Running the automated tests](#12-running-the-automated-tests)
+13. [Troubleshooting](#13-troubleshooting)
+14. [Project layout](#14-project-layout)
+15. [Architecture reference](#15-architecture-reference)
 
 ---
 
@@ -164,7 +165,7 @@ curl http://localhost:8000/rules/3f9c2b1a5e7d4c8a9b1f2e3d4c5b6a7f
 ```
 
 Returns every mined `IF <condition> THEN <action>` rule, with its source
-file/class/method and a confidence score. See [§6](#6-understanding-the-output)
+file/class/method and a confidence score. See [§7](#7-understanding-the-output)
 for the full field reference.
 
 ### Step 5 — Retrieve the dependency graph
@@ -188,7 +189,86 @@ summaries, and Mermaid `graph TD` decision-tree diagrams (paste any of them
 into a Mermaid renderer — e.g. the Mermaid Live Editor, or a Markdown viewer
 that supports Mermaid fences — to see it visually).
 
-## 6. Understanding the output
+## 6. Frontend integration guide
+
+This section is specifically for wiring a frontend (web/mobile/desktop UI)
+to the API — the exact call sequence, a working example, and the details
+that matter once the codebase you're submitting is large.
+
+### Sequence
+
+1. **Submit the ZIP** — `POST /analyze/codebase` (multipart form, `file`
+   field). Returns immediately with `{"analysis_id", "status": "pending"}`.
+   It runs as a background task, so this call never blocks regardless of
+   codebase size.
+2. **Poll status** — `GET /analysis/{analysis_id}` on an interval until
+   `status` is `completed` or `failed`.
+3. **Fetch results** (only once `completed`) — `GET /rules/{analysis_id}`,
+   `GET /dependencies/{analysis_id}`, `GET /documentation/{analysis_id}`,
+   in any order, and as many times as you like (results are persisted, not
+   recomputed).
+
+### Example (JavaScript `fetch`)
+
+```js
+async function analyzeCodebase(zipFile) {
+  const form = new FormData();
+  form.append("file", zipFile);
+
+  const submitRes = await fetch("http://localhost:8000/analyze/codebase", {
+    method: "POST",
+    body: form,
+  });
+  const { analysis_id } = await submitRes.json();
+
+  // 2. poll
+  let status;
+  do {
+    await new Promise((r) => setTimeout(r, 3000)); // see sizing notes below
+    const statusRes = await fetch(`http://localhost:8000/analysis/${analysis_id}`);
+    status = await statusRes.json();
+  } while (!["completed", "failed"].includes(status.status));
+
+  if (status.status === "failed") throw new Error(status.errors?.join(", "));
+
+  // 3. fetch results
+  const [rules, deps, docs] = await Promise.all([
+    fetch(`http://localhost:8000/rules/${analysis_id}`).then((r) => r.json()),
+    fetch(`http://localhost:8000/dependencies/${analysis_id}`).then((r) => r.json()),
+    fetch(`http://localhost:8000/documentation/${analysis_id}`).then((r) => r.json()),
+  ]);
+
+  return { rules, deps, docs };
+}
+```
+
+### Sizing considerations for large codebases
+
+- **Polling interval** — don't poll every second on a large ZIP; it just
+  adds noise while parsing/extraction runs. 3–5s is reasonable, or back off
+  over time (e.g. 1s → 2s → 5s). There's no push/webhook notification
+  today — polling is the only integration path.
+- **Throughput tuning** — `APP_MAX_PROCESS_WORKERS` and `APP_FILES_PER_CHUNK`
+  (env vars, [§10](#10-configuration-reference)) control parsing
+  parallelism; raise them on a beefier host to speed up very large
+  codebases.
+- **Upload size** — the server streams the upload straight to disk (no
+  in-memory buffering), so large ZIPs aren't a backend memory concern; if
+  there's a reverse proxy or API gateway in front of the app, check its
+  request body size limit separately, since that's outside this app's
+  control.
+
+### CORS
+
+`app/main.py` does not currently register `CORSMiddleware`. If your
+frontend is a browser app running on a different origin than the API
+(almost certainly the case), these calls will be blocked by the browser's
+CORS policy — server-to-server calls (`curl`, another backend) are
+unaffected. Add `fastapi.middleware.cors.CORSMiddleware` with your
+frontend's origin(s) in `allow_origins` before wiring this up from a
+browser-based frontend.
+
+## 7. Understanding the output
 
 **`/analysis/{id}`**
 
@@ -211,7 +291,7 @@ that supports Mermaid fences — to see it visually).
 | `condition` / `action` | The two halves of the statement, separately |
 | `source_class` / `source_method` / `source_file` | Where it came from |
 | `confidence` | 0–1, higher for clear validation/exception patterns |
-| `extraction_method` | `"heuristic"` (rule-based) or `"llm"` (AI-assisted, only when enabled — see §8) |
+| `extraction_method` | `"heuristic"` (rule-based) or `"llm"` (AI-assisted, only when enabled — see §9) |
 
 **`/dependencies/{id}`**
 
@@ -230,7 +310,7 @@ that supports Mermaid fences — to see it visually).
 | `flow_summaries` | One line per method listing what it calls |
 | `decision_trees_mermaid` | One Mermaid diagram per method that has conditional logic |
 
-## 7. Try it without your own code
+## 8. Try it without your own code
 
 The project ships with a small 3-file sample Java "place an order" mini-app
 under `tests/sample_java/`. Two ways to see the full pipeline run against it
@@ -260,7 +340,7 @@ result is sane):
 pytest tests/test_sample_analysis_output.py -v
 ```
 
-## 8. Enabling AI-assisted extraction (optional)
+## 9. Enabling AI-assisted extraction (optional)
 
 By default, classifying each `if`/`switch` condition (validation vs
 business vs decision) and writing its plain-English action is done by a
@@ -298,7 +378,7 @@ What actually happens when it's on:
 - `RuleMiningSubagent` (`app/agents/rule_subagent.py`) optionally rewrites
   each mined rule's statement into more natural wording, also concurrently.
 - Every rule's `extraction_method` field tells you which path actually
-  produced it (see §6) — check this if you want to confirm the LLM is
+  produced it (see §7) — check this if you want to confirm the LLM is
   really being used rather than silently falling back.
 - If a call fails, times out, or returns something that doesn't parse as
   the expected JSON shape, that specific method/rule falls back to the
@@ -307,7 +387,7 @@ What actually happens when it's on:
   fallback path using a stubbed response, so you can see the exact prompt
   shape without spending API credits.
 
-## 9. Configuration reference
+## 10. Configuration reference
 
 All settings are environment variables prefixed `APP_` (see
 `app/core/config.py`):
@@ -319,7 +399,7 @@ All settings are environment variables prefixed `APP_` (see
 | `APP_MAX_CONCURRENT_SUBAGENTS` | 8 | Concurrency cap for subagents/LLM calls |
 | `APP_CONFIDENCE_THRESHOLD` | 0.75 | Refinement loop stop condition |
 | `APP_MAX_REFINEMENT_ITERATIONS` | 3 | Cap on critic-triggered re-runs |
-| `APP_LLM_ENABLED` | false | Turn on LLM-based logic classification + rule rewriting (§8) |
+| `APP_LLM_ENABLED` | false | Turn on LLM-based logic classification + rule rewriting (§9) |
 | `APP_LLM_MODEL` | `gpt-4o-mini` | Any LiteLLM model string |
 | `APP_LLM_API_KEY` | "" | Provider API key (not needed for local providers like Ollama) |
 | `APP_LLM_API_BASE` | "" | Custom endpoint (Azure deployment URL, local Ollama server, ...) |
@@ -329,7 +409,7 @@ All settings are environment variables prefixed `APP_` (see
 | `APP_DATABASE_PATH` | `./data/analysis.db` | SQLite file location |
 | `APP_UPLOAD_DIR` | `./data/uploads` | Where uploaded ZIPs / cloned repos are staged |
 
-## 10. Advanced / optional features
+## 11. Advanced / optional features
 
 - **LangGraph orchestrator** (`app/orchestrator/langgraph_orchestrator.py`)
   — the identical pipeline expressed as a LangGraph `StateGraph` instead of
@@ -341,7 +421,7 @@ All settings are environment variables prefixed `APP_` (see
   `APP_NEO4J_USER`, `APP_NEO4J_PASSWORD` and call it directly (not yet wired
   to an API endpoint).
 
-## 11. Running the automated tests
+## 12. Running the automated tests
 
 ```bash
 pytest
@@ -351,7 +431,7 @@ Runs parsing, logic-extraction, rule-mining, dependency-graph, end-to-end
 orchestration, and LLM-wiring tests (with the LLM stubbed, so no network/API
 key is needed) against the bundled sample Java files.
 
-## 12. Troubleshooting
+## 13. Troubleshooting
 
 **Analysis is stuck on `pending` or `parsing`.**
 Check the server logs — the background task logs each subagent's
@@ -391,7 +471,11 @@ recursively searches for `*.java`, but an incorrectly-zipped folder — e.g.
 zipping the parent of your project instead of the project itself — is a
 common mistake). Check `/analysis/{id}`'s `file_count`.
 
-## 13. Project layout
+**Browser frontend gets a CORS error calling the API.**
+See [§6's CORS note](#cors) — `CORSMiddleware` isn't registered by default;
+add it with your frontend's origin(s) allowed.
+
+## 14. Project layout
 
 ```
 backend/
@@ -420,7 +504,7 @@ backend/
 └── README.md                    This document
 ```
 
-## 14. Architecture reference
+## 15. Architecture reference
 
 ```
 Supervisor Agent (app/agents/supervisor_agent.py)
