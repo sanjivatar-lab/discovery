@@ -1,0 +1,11 @@
+{
+  "file_count": 3,
+  "class_count": 3,
+  "method_count": 8,
+  "rule_count": 8,
+  "confidence_score": 0.7729166666666667,
+  "iterations": 1,
+  "weak_areas": [
+    "dependencies:16 call(s) could not be resolved to a known method"
+  ]
+}

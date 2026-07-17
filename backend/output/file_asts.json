@@ -1,0 +1,559 @@
+[
+  {
+    "file_path": "C:\\Code\\Discovery\\backend\\tests\\sample_java\\InventoryService.java",
+    "package": "com.example.orders",
+    "imports": [],
+    "classes": [
+      {
+        "name": "InventoryService",
+        "kind": "class",
+        "package": "com.example.orders",
+        "superclass": "",
+        "interfaces": [],
+        "annotations": [
+          {
+            "name": "Service",
+            "arguments": "",
+            "start_line": 3,
+            "end_line": 3
+          }
+        ],
+        "modifiers": [
+          "public"
+        ],
+        "fields": [
+          {
+            "type": "int",
+            "name": "minimumStockThreshold",
+            "annotations": [],
+            "modifiers": [
+              "private"
+            ]
+          }
+        ],
+        "methods": [
+          {
+            "name": "checkAvailability",
+            "return_type": "boolean",
+            "modifiers": [
+              "public"
+            ],
+            "params": [
+              {
+                "type": "String",
+                "name": "sku"
+              },
+              {
+                "type": "int",
+                "name": "quantity"
+              }
+            ],
+            "annotations": [],
+            "conditions": [
+              {
+                "kind": "if",
+                "expression": "available < quantity",
+                "start_line": 10,
+                "end_line": 12,
+                "then_summary": "{\n            return false;\n        }",
+                "else_summary": "",
+                "case_labels": []
+              }
+            ],
+            "calls": [
+              {
+                "caller_method": "checkAvailability",
+                "callee_object": "",
+                "callee_name": "lookupStock",
+                "start_line": 9
+              }
+            ],
+            "start_line": 8,
+            "end_line": 14
+          },
+          {
+            "name": "reserveStock",
+            "return_type": "void",
+            "modifiers": [
+              "public"
+            ],
+            "params": [
+              {
+                "type": "String",
+                "name": "sku"
+              },
+              {
+                "type": "int",
+                "name": "quantity"
+              }
+            ],
+            "annotations": [],
+            "conditions": [
+              {
+                "kind": "if",
+                "expression": "available - quantity < minimumStockThreshold",
+                "start_line": 18,
+                "end_line": 20,
+                "then_summary": "{\n            notifyLowStock(sku);\n        }",
+                "else_summary": "",
+                "case_labels": []
+              }
+            ],
+            "calls": [
+              {
+                "caller_method": "reserveStock",
+                "callee_object": "",
+                "callee_name": "lookupStock",
+                "start_line": 17
+              },
+              {
+                "caller_method": "reserveStock",
+                "callee_object": "",
+                "callee_name": "notifyLowStock",
+                "start_line": 19
+              }
+            ],
+            "start_line": 16,
+            "end_line": 21
+          },
+          {
+            "name": "lookupStock",
+            "return_type": "int",
+            "modifiers": [
+              "private"
+            ],
+            "params": [
+              {
+                "type": "String",
+                "name": "sku"
+              }
+            ],
+            "annotations": [],
+            "conditions": [],
+            "calls": [
+              {
+                "caller_method": "lookupStock",
+                "callee_object": "sku",
+                "callee_name": "length",
+                "start_line": 24
+              }
+            ],
+            "start_line": 23,
+            "end_line": 25
+          },
+          {
+            "name": "notifyLowStock",
+            "return_type": "void",
+            "modifiers": [
+              "private"
+            ],
+            "params": [
+              {
+                "type": "String",
+                "name": "sku"
+              }
+            ],
+            "annotations": [],
+            "conditions": [],
+            "calls": [
+              {
+                "caller_method": "notifyLowStock",
+                "callee_object": "System.out",
+                "callee_name": "println",
+                "start_line": 28
+              }
+            ],
+            "start_line": 27,
+            "end_line": 29
+          }
+        ],
+        "start_line": 3,
+        "end_line": 30
+      }
+    ],
+    "parse_errors": [],
+    "has_syntax_error": false
+  },
+  {
+    "file_path": "C:\\Code\\Discovery\\backend\\tests\\sample_java\\OrderController.java",
+    "package": "com.example.orders",
+    "imports": [
+      "com.example.orders.model.Order"
+    ],
+    "classes": [
+      {
+        "name": "OrderController",
+        "kind": "class",
+        "package": "com.example.orders",
+        "superclass": "",
+        "interfaces": [],
+        "annotations": [
+          {
+            "name": "RestController",
+            "arguments": "",
+            "start_line": 5,
+            "end_line": 5
+          }
+        ],
+        "modifiers": [
+          "public"
+        ],
+        "fields": [
+          {
+            "type": "OrderService",
+            "name": "orderService",
+            "annotations": [
+              {
+                "name": "Autowired",
+                "arguments": "",
+                "start_line": 8,
+                "end_line": 8
+              }
+            ],
+            "modifiers": [
+              "private"
+            ]
+          }
+        ],
+        "methods": [
+          {
+            "name": "createOrder",
+            "return_type": "Order",
+            "modifiers": [
+              "public"
+            ],
+            "params": [
+              {
+                "type": "Order",
+                "name": "order"
+              }
+            ],
+            "annotations": [
+              {
+                "name": "PostMapping",
+                "arguments": "(\"/orders\")",
+                "start_line": 11,
+                "end_line": 11
+              }
+            ],
+            "conditions": [
+              {
+                "kind": "if",
+                "expression": "order.getCustomerId() == null || order.getCustomerId().isEmpty",
+                "start_line": 13,
+                "end_line": 15,
+                "then_summary": "{\n            throw new IllegalArgumentException(\"customerId is required\");\n        }",
+                "else_summary": "",
+                "case_labels": []
+              }
+            ],
+            "calls": [
+              {
+                "caller_method": "createOrder",
+                "callee_object": "order",
+                "callee_name": "getCustomerId",
+                "start_line": 13
+              },
+              {
+                "caller_method": "createOrder",
+                "callee_object": "order.getCustomerId()",
+                "callee_name": "isEmpty",
+                "start_line": 13
+              },
+              {
+                "caller_method": "createOrder",
+                "callee_object": "order",
+                "callee_name": "getCustomerId",
+                "start_line": 13
+              },
+              {
+                "caller_method": "createOrder",
+                "callee_object": "orderService",
+                "callee_name": "placeOrder",
+                "start_line": 16
+              }
+            ],
+            "start_line": 11,
+            "end_line": 17
+          },
+          {
+            "name": "getStatus",
+            "return_type": "String",
+            "modifiers": [
+              "public"
+            ],
+            "params": [
+              {
+                "type": "Order",
+                "name": "order"
+              }
+            ],
+            "annotations": [
+              {
+                "name": "GetMapping",
+                "arguments": "(\"/orders/{id}/status\")",
+                "start_line": 19,
+                "end_line": 19
+              }
+            ],
+            "conditions": [],
+            "calls": [
+              {
+                "caller_method": "getStatus",
+                "callee_object": "orderService",
+                "callee_name": "describeStatus",
+                "start_line": 21
+              }
+            ],
+            "start_line": 19,
+            "end_line": 22
+          }
+        ],
+        "start_line": 5,
+        "end_line": 23
+      }
+    ],
+    "parse_errors": [],
+    "has_syntax_error": false
+  },
+  {
+    "file_path": "C:\\Code\\Discovery\\backend\\tests\\sample_java\\OrderService.java",
+    "package": "com.example.orders",
+    "imports": [
+      "com.example.orders.model.Order",
+      "com.example.orders.model.OrderStatus"
+    ],
+    "classes": [
+      {
+        "name": "OrderService",
+        "kind": "class",
+        "package": "com.example.orders",
+        "superclass": "",
+        "interfaces": [],
+        "annotations": [
+          {
+            "name": "Service",
+            "arguments": "",
+            "start_line": 6,
+            "end_line": 6
+          }
+        ],
+        "modifiers": [
+          "public"
+        ],
+        "fields": [
+          {
+            "type": "InventoryService",
+            "name": "inventoryService",
+            "annotations": [
+              {
+                "name": "Autowired",
+                "arguments": "",
+                "start_line": 9,
+                "end_line": 9
+              }
+            ],
+            "modifiers": [
+              "private"
+            ]
+          },
+          {
+            "type": "PaymentService",
+            "name": "paymentService",
+            "annotations": [
+              {
+                "name": "Autowired",
+                "arguments": "",
+                "start_line": 12,
+                "end_line": 12
+              }
+            ],
+            "modifiers": [
+              "private"
+            ]
+          }
+        ],
+        "methods": [
+          {
+            "name": "placeOrder",
+            "return_type": "Order",
+            "modifiers": [
+              "public"
+            ],
+            "params": [
+              {
+                "type": "Order",
+                "name": "order"
+              }
+            ],
+            "annotations": [],
+            "conditions": [
+              {
+                "kind": "if",
+                "expression": "order == null",
+                "start_line": 16,
+                "end_line": 18,
+                "then_summary": "{\n            throw new IllegalArgumentException(\"Order must not be null\");\n        }",
+                "else_summary": "",
+                "case_labels": []
+              },
+              {
+                "kind": "if",
+                "expression": "order.getQuantity() <= 0",
+                "start_line": 19,
+                "end_line": 21,
+                "then_summary": "{\n            throw new IllegalArgumentException(\"Quantity must be greater than zero\");\n        }",
+                "else_summary": "",
+                "case_labels": []
+              },
+              {
+                "kind": "if",
+                "expression": "!available",
+                "start_line": 24,
+                "end_line": 27,
+                "then_summary": "{\n            order.setStatus(OrderStatus.REJECTED);\n            return order;\n        }",
+                "else_summary": "",
+                "case_labels": []
+              },
+              {
+                "kind": "if",
+                "expression": "charged",
+                "start_line": 30,
+                "end_line": 35,
+                "then_summary": "{\n            inventoryService.reserveStock(order.getSku(), order.getQuantity());\n            order.setStatus(OrderStatus.CONFIRMED);\n        }",
+                "else_summary": "{\n            order.setStatus(OrderStatus.PAYMENT_FAILED);\n        }",
+                "case_labels": []
+              }
+            ],
+            "calls": [
+              {
+                "caller_method": "placeOrder",
+                "callee_object": "order",
+                "callee_name": "getQuantity",
+                "start_line": 19
+              },
+              {
+                "caller_method": "placeOrder",
+                "callee_object": "inventoryService",
+                "callee_name": "checkAvailability",
+                "start_line": 23
+              },
+              {
+                "caller_method": "placeOrder",
+                "callee_object": "order",
+                "callee_name": "getSku",
+                "start_line": 23
+              },
+              {
+                "caller_method": "placeOrder",
+                "callee_object": "order",
+                "callee_name": "getQuantity",
+                "start_line": 23
+              },
+              {
+                "caller_method": "placeOrder",
+                "callee_object": "order",
+                "callee_name": "setStatus",
+                "start_line": 25
+              },
+              {
+                "caller_method": "placeOrder",
+                "callee_object": "paymentService",
+                "callee_name": "charge",
+                "start_line": 29
+              },
+              {
+                "caller_method": "placeOrder",
+                "callee_object": "order",
+                "callee_name": "getCustomerId",
+                "start_line": 29
+              },
+              {
+                "caller_method": "placeOrder",
+                "callee_object": "order",
+                "callee_name": "getTotal",
+                "start_line": 29
+              },
+              {
+                "caller_method": "placeOrder",
+                "callee_object": "inventoryService",
+                "callee_name": "reserveStock",
+                "start_line": 31
+              },
+              {
+                "caller_method": "placeOrder",
+                "callee_object": "order",
+                "callee_name": "getSku",
+                "start_line": 31
+              },
+              {
+                "caller_method": "placeOrder",
+                "callee_object": "order",
+                "callee_name": "getQuantity",
+                "start_line": 31
+              },
+              {
+                "caller_method": "placeOrder",
+                "callee_object": "order",
+                "callee_name": "setStatus",
+                "start_line": 32
+              },
+              {
+                "caller_method": "placeOrder",
+                "callee_object": "order",
+                "callee_name": "setStatus",
+                "start_line": 34
+              }
+            ],
+            "start_line": 15,
+            "end_line": 38
+          },
+          {
+            "name": "describeStatus",
+            "return_type": "String",
+            "modifiers": [
+              "public"
+            ],
+            "params": [
+              {
+                "type": "Order",
+                "name": "order"
+              }
+            ],
+            "annotations": [],
+            "conditions": [
+              {
+                "kind": "switch",
+                "expression": "order.getStatus",
+                "start_line": 41,
+                "end_line": 50,
+                "then_summary": "",
+                "else_summary": "",
+                "case_labels": [
+                  "case CONFIRMED",
+                  "case REJECTED",
+                  "case PAYMENT_FAILED",
+                  "default"
+                ]
+              }
+            ],
+            "calls": [
+              {
+                "caller_method": "describeStatus",
+                "callee_object": "order",
+                "callee_name": "getStatus",
+                "start_line": 41
+              }
+            ],
+            "start_line": 40,
+            "end_line": 51
+          }
+        ],
+        "start_line": 6,
+        "end_line": 52
+      }
+    ],
+    "parse_errors": [],
+    "has_syntax_error": false
+  }
+]

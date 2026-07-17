@@ -1,0 +1,19 @@
+{
+  "flow_summaries": [
+    "InventoryService.checkAvailability calls: lookupStock()",
+    "InventoryService.reserveStock calls: lookupStock(), notifyLowStock()",
+    "InventoryService.lookupStock calls: sku.length()",
+    "InventoryService.notifyLowStock calls: System.out.println()",
+    "OrderController.createOrder calls: order.getCustomerId(), order.getCustomerId().isEmpty(), order.getCustomerId(), orderService.placeOrder()",
+    "OrderController.getStatus calls: orderService.describeStatus()",
+    "OrderService.placeOrder calls: order.getQuantity(), inventoryService.checkAvailability(), order.getSku(), order.getQuantity(), order.setStatus(), paymentService.charge(), order.getCustomerId(), order.getTotal()",
+    "OrderService.describeStatus calls: order.getStatus()"
+  ],
+  "decision_trees_mermaid": [
+    "graph TD\n  Start([\"InventoryService.checkAvailability\"])\n  Start --> C0{{\"available < quantity\"}}\n  C0 -->|\"true\"| T0([\"{\n            return false;\n  \"])",
+    "graph TD\n  Start([\"InventoryService.reserveStock\"])\n  Start --> C0{{\"available - quantity < minimumStockThreshold\"}}\n  C0 -->|\"true\"| T0([\"{\n            notifyLowStock(s\"])",
+    "graph TD\n  Start([\"OrderController.createOrder\"])\n  Start --> C0{{\"order.getCustomerId() == null || order.getCustomerId().isEmp\"}}\n  C0 -->|\"true\"| T0([\"{\n            throw new Illega\"])",
+    "graph TD\n  Start([\"OrderService.placeOrder\"])\n  Start --> C0{{\"order == null\"}}\n  C0 -->|\"true\"| T0([\"{\n            throw new Illega\"])\n  C0 --> C1{{\"order.getQuantity() <= 0\"}}\n  C1 -->|\"true\"| T1([\"{\n            throw new Illega\"])\n  C1 --> C2{{\"!available\"}}\n  C2 -->|\"true\"| T2([\"{\n            order.setStatus(\"])\n  C2 --> C3{{\"charged\"}}\n  C3 -->|\"true\"| T3([\"{\n            inventoryService\"])\n  C3 -->|\"false\"| F3([\"{\n            order.setStatus(\"])",
+    "graph TD\n  Start([\"OrderService.describeStatus\"])\n  Start --> C0{{\"order.getStatus\"}}\n  C0 -->|\"case CONFIRMED\"| E0_0([\"...\"])\n  C0 -->|\"case REJECTED\"| E0_1([\"...\"])\n  C0 -->|\"case PAYMENT_FAILED\"| E0_2([\"...\"])\n  C0 -->|\"default\"| E0_3([\"...\"])"
+  ]
+}

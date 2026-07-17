@@ -1,0 +1,98 @@
+[
+  {
+    "id": "8020320ec987e399",
+    "source_file": "C:\\Code\\Discovery\\backend\\tests\\sample_java\\InventoryService.java",
+    "source_class": "InventoryService",
+    "source_method": "checkAvailability",
+    "rule_type": "business",
+    "condition": "available < quantity",
+    "action": "return false",
+    "statement": "IF available < quantity THEN return false",
+    "confidence": 0.6,
+    "raw_snippet": "{\n            return false;\n        }"
+  },
+  {
+    "id": "a14614195a3e515d",
+    "source_file": "C:\\Code\\Discovery\\backend\\tests\\sample_java\\InventoryService.java",
+    "source_class": "InventoryService",
+    "source_method": "reserveStock",
+    "rule_type": "business",
+    "condition": "available - quantity < minimumStockThreshold",
+    "action": "notifyLowStock(sku)",
+    "statement": "IF available - quantity < minimumStockThreshold THEN notifyLowStock(sku)",
+    "confidence": 0.6,
+    "raw_snippet": "{\n            notifyLowStock(sku);\n        }"
+  },
+  {
+    "id": "6b90fa233d954401",
+    "source_file": "C:\\Code\\Discovery\\backend\\tests\\sample_java\\OrderController.java",
+    "source_class": "OrderController",
+    "source_method": "createOrder",
+    "rule_type": "validation",
+    "condition": "order.getCustomerId() == null || order.getCustomerId().isEmpty",
+    "action": "throw new IllegalArgumentException(\"customerId is required\")",
+    "statement": "IF order.getCustomerId() == null || order.getCustomerId().isEmpty THEN throw new IllegalArgumentException(\"customerId is required\")",
+    "confidence": 0.95,
+    "raw_snippet": "{\n            throw new IllegalArgumentException(\"customerId is required\");\n        }"
+  },
+  {
+    "id": "7b71c6632668e2b2",
+    "source_file": "C:\\Code\\Discovery\\backend\\tests\\sample_java\\OrderService.java",
+    "source_class": "OrderService",
+    "source_method": "placeOrder",
+    "rule_type": "validation",
+    "condition": "order == null",
+    "action": "throw new IllegalArgumentException(\"Order must not be null\")",
+    "statement": "IF order == null THEN throw new IllegalArgumentException(\"Order must not be null\")",
+    "confidence": 0.95,
+    "raw_snippet": "{\n            throw new IllegalArgumentException(\"Order must not be null\");\n        }"
+  },
+  {
+    "id": "270adea1075a2443",
+    "source_file": "C:\\Code\\Discovery\\backend\\tests\\sample_java\\OrderService.java",
+    "source_class": "OrderService",
+    "source_method": "placeOrder",
+    "rule_type": "validation",
+    "condition": "order.getQuantity() <= 0",
+    "action": "throw new IllegalArgumentException(\"Quantity must be greater than zero\")",
+    "statement": "IF order.getQuantity() <= 0 THEN throw new IllegalArgumentException(\"Quantity must be greater than zero\")",
+    "confidence": 0.95,
+    "raw_snippet": "{\n            throw new IllegalArgumentException(\"Quantity must be greater than zero\");\n        }"
+  },
+  {
+    "id": "dd436baa14a74034",
+    "source_file": "C:\\Code\\Discovery\\backend\\tests\\sample_java\\OrderService.java",
+    "source_class": "OrderService",
+    "source_method": "placeOrder",
+    "rule_type": "business",
+    "condition": "!available",
+    "action": "order.setStatus(OrderStatus.REJECTED)",
+    "statement": "IF !available THEN order.setStatus(OrderStatus.REJECTED)",
+    "confidence": 0.75,
+    "raw_snippet": "{\n            order.setStatus(OrderStatus.REJECTED);\n            return order;\n        }"
+  },
+  {
+    "id": "29606b00ed9628be",
+    "source_file": "C:\\Code\\Discovery\\backend\\tests\\sample_java\\OrderService.java",
+    "source_class": "OrderService",
+    "source_method": "placeOrder",
+    "rule_type": "business",
+    "condition": "charged",
+    "action": "inventoryService.reserveStock(order.getSku(), order.getQuantity())",
+    "statement": "IF charged THEN inventoryService.reserveStock(order.getSku(), order.getQuantity())",
+    "confidence": 0.6,
+    "raw_snippet": "{\n            inventoryService.reserveStock(order.getSku(), order.getQuantity());\n            order.setStatus(OrderStatus.CONFIRMED);\n        }"
+  },
+  {
+    "id": "123ffd81e4136bab",
+    "source_file": "C:\\Code\\Discovery\\backend\\tests\\sample_java\\OrderService.java",
+    "source_class": "OrderService",
+    "source_method": "describeStatus",
+    "rule_type": "decision",
+    "condition": "order.getStatus",
+    "action": "case CONFIRMED; case REJECTED; case PAYMENT_FAILED; default",
+    "statement": "IF order.getStatus THEN case CONFIRMED; case REJECTED; case PAYMENT_FAILED; default",
+    "confidence": 0.75,
+    "raw_snippet": "order.getStatus"
+  }
+]

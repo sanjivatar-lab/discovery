@@ -1,0 +1,11 @@
+# Bonus / optional extensions — install only if you enable the corresponding
+# feature flag in app/core/config.py (Settings).
+#
+# APP_LLM_ENABLED=true -> LLM-assisted rule-statement enhancement (app/tools/llm_tool.py)
+litellm>=1.34
+
+# APP_USE_LANGGRAPH=true -> LangGraph-based orchestrator
+langgraph>=0.1.0
+
+# Neo4j knowledge-graph export via GraphBuilderTool.export_to_neo4j
+neo4j>=5.19

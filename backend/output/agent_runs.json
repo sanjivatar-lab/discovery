@@ -1,0 +1,50 @@
+[
+  {
+    "agent_name": "parsing_subagent[0]",
+    "iteration": 1,
+    "duration_ms": 1075.2842000001692,
+    "success": true,
+    "retries": 0,
+    "error": null
+  },
+  {
+    "agent_name": "logic_extraction_subagent",
+    "iteration": 1,
+    "duration_ms": 0.3652000013971701,
+    "success": true,
+    "retries": 0,
+    "error": null
+  },
+  {
+    "agent_name": "rule_mining_subagent",
+    "iteration": 1,
+    "duration_ms": 0.28759999986505136,
+    "success": true,
+    "retries": 0,
+    "error": null
+  },
+  {
+    "agent_name": "dependency_graph_subagent",
+    "iteration": 1,
+    "duration_ms": 0.5851999994774815,
+    "success": true,
+    "retries": 0,
+    "error": null
+  },
+  {
+    "agent_name": "documentation_subagent",
+    "iteration": 1,
+    "duration_ms": 0.14850000297883525,
+    "success": true,
+    "retries": 0,
+    "error": null
+  },
+  {
+    "agent_name": "critic_subagent",
+    "iteration": 1,
+    "duration_ms": 0.056400000175926834,
+    "success": true,
+    "retries": 0,
+    "error": null
+  }
+]

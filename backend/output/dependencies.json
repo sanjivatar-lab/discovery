@@ -1,0 +1,187 @@
+{
+  "nodes": [
+    {
+      "id": "InventoryService",
+      "label": "InventoryService",
+      "type": "service"
+    },
+    {
+      "id": "InventoryService.checkAvailability",
+      "label": "InventoryService.checkAvailability",
+      "type": "method"
+    },
+    {
+      "id": "InventoryService.reserveStock",
+      "label": "InventoryService.reserveStock",
+      "type": "method"
+    },
+    {
+      "id": "InventoryService.lookupStock",
+      "label": "InventoryService.lookupStock",
+      "type": "method"
+    },
+    {
+      "id": "InventoryService.notifyLowStock",
+      "label": "InventoryService.notifyLowStock",
+      "type": "method"
+    },
+    {
+      "id": "OrderController",
+      "label": "OrderController",
+      "type": "service"
+    },
+    {
+      "id": "OrderController.createOrder",
+      "label": "OrderController.createOrder",
+      "type": "method"
+    },
+    {
+      "id": "OrderController.getStatus",
+      "label": "OrderController.getStatus",
+      "type": "method"
+    },
+    {
+      "id": "OrderService",
+      "label": "OrderService",
+      "type": "service"
+    },
+    {
+      "id": "OrderService.placeOrder",
+      "label": "OrderService.placeOrder",
+      "type": "method"
+    },
+    {
+      "id": "OrderService.describeStatus",
+      "label": "OrderService.describeStatus",
+      "type": "method"
+    }
+  ],
+  "edges": [
+    {
+      "source": "InventoryService",
+      "target": "InventoryService.checkAvailability",
+      "type": "defines",
+      "weight": 1
+    },
+    {
+      "source": "InventoryService",
+      "target": "InventoryService.reserveStock",
+      "type": "defines",
+      "weight": 1
+    },
+    {
+      "source": "InventoryService",
+      "target": "InventoryService.lookupStock",
+      "type": "defines",
+      "weight": 1
+    },
+    {
+      "source": "InventoryService",
+      "target": "InventoryService.notifyLowStock",
+      "type": "defines",
+      "weight": 1
+    },
+    {
+      "source": "InventoryService.checkAvailability",
+      "target": "InventoryService.lookupStock",
+      "type": "calls",
+      "weight": 1
+    },
+    {
+      "source": "InventoryService.reserveStock",
+      "target": "InventoryService.lookupStock",
+      "type": "calls",
+      "weight": 1
+    },
+    {
+      "source": "InventoryService.reserveStock",
+      "target": "InventoryService.notifyLowStock",
+      "type": "calls",
+      "weight": 1
+    },
+    {
+      "source": "OrderController",
+      "target": "OrderController.createOrder",
+      "type": "defines",
+      "weight": 1
+    },
+    {
+      "source": "OrderController",
+      "target": "OrderController.getStatus",
+      "type": "defines",
+      "weight": 1
+    },
+    {
+      "source": "OrderController",
+      "target": "OrderService",
+      "type": "depends_on",
+      "weight": 1
+    },
+    {
+      "source": "OrderController.createOrder",
+      "target": "OrderService.placeOrder",
+      "type": "calls",
+      "weight": 1
+    },
+    {
+      "source": "OrderController.getStatus",
+      "target": "OrderService.describeStatus",
+      "type": "calls",
+      "weight": 1
+    },
+    {
+      "source": "OrderService",
+      "target": "OrderService.placeOrder",
+      "type": "defines",
+      "weight": 1
+    },
+    {
+      "source": "OrderService",
+      "target": "OrderService.describeStatus",
+      "type": "defines",
+      "weight": 1
+    },
+    {
+      "source": "OrderService",
+      "target": "InventoryService",
+      "type": "depends_on",
+      "weight": 1
+    },
+    {
+      "source": "OrderService.placeOrder",
+      "target": "InventoryService.checkAvailability",
+      "type": "calls",
+      "weight": 1
+    },
+    {
+      "source": "OrderService.placeOrder",
+      "target": "InventoryService.reserveStock",
+      "type": "calls",
+      "weight": 1
+    },
+    {
+      "source": "OrderService.describeStatus",
+      "target": "OrderController.getStatus",
+      "type": "calls",
+      "weight": 1
+    }
+  ],
+  "unresolved_calls": [
+    "InventoryService.lookupStock -> sku.length",
+    "InventoryService.notifyLowStock -> System.out.println",
+    "OrderController.createOrder -> order.getCustomerId",
+    "OrderController.createOrder -> order.getCustomerId().isEmpty",
+    "OrderController.createOrder -> order.getCustomerId",
+    "OrderService.placeOrder -> order.getQuantity",
+    "OrderService.placeOrder -> order.getSku",
+    "OrderService.placeOrder -> order.getQuantity",
+    "OrderService.placeOrder -> order.setStatus",
+    "OrderService.placeOrder -> paymentService.charge",
+    "OrderService.placeOrder -> order.getCustomerId",
+    "OrderService.placeOrder -> order.getTotal",
+    "OrderService.placeOrder -> order.getSku",
+    "OrderService.placeOrder -> order.getQuantity",
+    "OrderService.placeOrder -> order.setStatus",
+    "OrderService.placeOrder -> order.setStatus"
+  ]
+}
