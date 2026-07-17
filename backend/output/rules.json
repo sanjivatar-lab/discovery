@@ -9,7 +9,8 @@
     "action": "return false",
     "statement": "IF available < quantity THEN return false",
     "confidence": 0.6,
-    "raw_snippet": "{\n            return false;\n        }"
+    "raw_snippet": "{\n            return false;\n        }",
+    "extraction_method": "heuristic"
   },
   {
     "id": "a14614195a3e515d",
@@ -21,7 +22,8 @@
     "action": "notifyLowStock(sku)",
     "statement": "IF available - quantity < minimumStockThreshold THEN notifyLowStock(sku)",
     "confidence": 0.6,
-    "raw_snippet": "{\n            notifyLowStock(sku);\n        }"
+    "raw_snippet": "{\n            notifyLowStock(sku);\n        }",
+    "extraction_method": "heuristic"
   },
   {
     "id": "6b90fa233d954401",
@@ -33,7 +35,8 @@
     "action": "throw new IllegalArgumentException(\"customerId is required\")",
     "statement": "IF order.getCustomerId() == null || order.getCustomerId().isEmpty THEN throw new IllegalArgumentException(\"customerId is required\")",
     "confidence": 0.95,
-    "raw_snippet": "{\n            throw new IllegalArgumentException(\"customerId is required\");\n        }"
+    "raw_snippet": "{\n            throw new IllegalArgumentException(\"customerId is required\");\n        }",
+    "extraction_method": "heuristic"
   },
   {
     "id": "7b71c6632668e2b2",
@@ -45,7 +48,8 @@
     "action": "throw new IllegalArgumentException(\"Order must not be null\")",
     "statement": "IF order == null THEN throw new IllegalArgumentException(\"Order must not be null\")",
     "confidence": 0.95,
-    "raw_snippet": "{\n            throw new IllegalArgumentException(\"Order must not be null\");\n        }"
+    "raw_snippet": "{\n            throw new IllegalArgumentException(\"Order must not be null\");\n        }",
+    "extraction_method": "heuristic"
   },
   {
     "id": "270adea1075a2443",
@@ -57,7 +61,8 @@
     "action": "throw new IllegalArgumentException(\"Quantity must be greater than zero\")",
     "statement": "IF order.getQuantity() <= 0 THEN throw new IllegalArgumentException(\"Quantity must be greater than zero\")",
     "confidence": 0.95,
-    "raw_snippet": "{\n            throw new IllegalArgumentException(\"Quantity must be greater than zero\");\n        }"
+    "raw_snippet": "{\n            throw new IllegalArgumentException(\"Quantity must be greater than zero\");\n        }",
+    "extraction_method": "heuristic"
   },
   {
     "id": "dd436baa14a74034",
@@ -69,7 +74,8 @@
     "action": "order.setStatus(OrderStatus.REJECTED)",
     "statement": "IF !available THEN order.setStatus(OrderStatus.REJECTED)",
     "confidence": 0.75,
-    "raw_snippet": "{\n            order.setStatus(OrderStatus.REJECTED);\n            return order;\n        }"
+    "raw_snippet": "{\n            order.setStatus(OrderStatus.REJECTED);\n            return order;\n        }",
+    "extraction_method": "heuristic"
   },
   {
     "id": "29606b00ed9628be",
@@ -81,7 +87,8 @@
     "action": "inventoryService.reserveStock(order.getSku(), order.getQuantity())",
     "statement": "IF charged THEN inventoryService.reserveStock(order.getSku(), order.getQuantity())",
     "confidence": 0.6,
-    "raw_snippet": "{\n            inventoryService.reserveStock(order.getSku(), order.getQuantity());\n            order.setStatus(OrderStatus.CONFIRMED);\n        }"
+    "raw_snippet": "{\n            inventoryService.reserveStock(order.getSku(), order.getQuantity());\n            order.setStatus(OrderStatus.CONFIRMED);\n        }",
+    "extraction_method": "heuristic"
   },
   {
     "id": "123ffd81e4136bab",
@@ -93,6 +100,7 @@
     "action": "case CONFIRMED; case REJECTED; case PAYMENT_FAILED; default",
     "statement": "IF order.getStatus THEN case CONFIRMED; case REJECTED; case PAYMENT_FAILED; default",
     "confidence": 0.75,
-    "raw_snippet": "order.getStatus"
+    "raw_snippet": "order.getStatus",
+    "extraction_method": "heuristic"
   }
 ]

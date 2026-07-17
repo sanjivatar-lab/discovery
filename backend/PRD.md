@@ -127,12 +127,18 @@ still not confident after that, it tells you exactly which part is weak
   through the service's own fields) may be reported as "unresolved" rather
   than confidently linked. This is intentional — the tool would rather
   admit uncertainty than silently guess wrong.
-- **It does not use AI/LLM text generation by default.** Out of the box,
-  every rule and description comes from directly reading the code
-  structure, not from an AI's interpretation — so results are
-  deterministic and reproducible. An optional AI-enhancement mode can be
-  turned on later to make rule wording read more naturally, but it is
-  off unless a team deliberately enables it.
+- **It does not use an AI model by default.** Out of the box, every rule
+  and description comes from directly reading the code structure via
+  fixed rules, not from an AI's interpretation — so results are
+  deterministic and reproducible. A team can deliberately turn on an
+  optional AI mode (compatible with any major AI provider — OpenAI,
+  Anthropic, Azure, or a privately hosted model, chosen by a single
+  setting) so a language model reads each decision point and writes the
+  rule and its wording in its own words; every rule keeps a label saying
+  whether it came from the fixed rules or the AI, and if the AI ever
+  fails or gives a nonsensical answer for one rule, that single rule
+  quietly falls back to the fixed-rule version rather than breaking the
+  whole report.
 - **It does not modify your code.** It only reads it.
 
 ## 9. Under the hood, briefly (for technical stakeholders)

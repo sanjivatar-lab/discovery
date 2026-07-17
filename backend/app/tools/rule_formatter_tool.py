@@ -21,6 +21,8 @@ def score_confidence(unit: LogicUnit) -> float:
         score += 0.15
     if unit.annotations:
         score += 0.1
+    if unit.extraction_method == "llm":
+        score += 0.1  # LLM saw the full method body, not just keyword matches
     if not unit.condition.strip():
         score -= 0.3
     return max(0.0, min(1.0, score))
@@ -47,4 +49,5 @@ def format_rule(unit: LogicUnit) -> Rule:
         statement=to_statement(unit.condition, unit.action),
         confidence=score_confidence(unit),
         raw_snippet=unit.raw_snippet,
+        extraction_method=unit.extraction_method,
     )

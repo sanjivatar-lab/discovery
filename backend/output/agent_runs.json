@@ -2,7 +2,7 @@
   {
     "agent_name": "parsing_subagent[0]",
     "iteration": 1,
-    "duration_ms": 1075.2842000001692,
+    "duration_ms": 1062.9848999997193,
     "success": true,
     "retries": 0,
     "error": null
@@ -10,7 +10,7 @@
   {
     "agent_name": "logic_extraction_subagent",
     "iteration": 1,
-    "duration_ms": 0.3652000013971701,
+    "duration_ms": 0.5693999992217869,
     "success": true,
     "retries": 0,
     "error": null
@@ -18,7 +18,7 @@
   {
     "agent_name": "rule_mining_subagent",
     "iteration": 1,
-    "duration_ms": 0.28759999986505136,
+    "duration_ms": 0.3088999983447138,
     "success": true,
     "retries": 0,
     "error": null
@@ -26,7 +26,7 @@
   {
     "agent_name": "dependency_graph_subagent",
     "iteration": 1,
-    "duration_ms": 0.5851999994774815,
+    "duration_ms": 0.9581000012985896,
     "success": true,
     "retries": 0,
     "error": null
@@ -34,7 +34,7 @@
   {
     "agent_name": "documentation_subagent",
     "iteration": 1,
-    "duration_ms": 0.14850000297883525,
+    "duration_ms": 0.18880000061471947,
     "success": true,
     "retries": 0,
     "error": null
@@ -42,7 +42,7 @@
   {
     "agent_name": "critic_subagent",
     "iteration": 1,
-    "duration_ms": 0.056400000175926834,
+    "duration_ms": 0.0627999979769811,
     "success": true,
     "retries": 0,
     "error": null

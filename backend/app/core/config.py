@@ -28,10 +28,14 @@ class Settings(BaseSettings):
     max_refinement_iterations: int = 3
     agent_max_retries: int = 2
 
-    # LLM (pluggable via LiteLLM). Left unset -> heuristic-only extraction.
-    llm_provider: str = ""
+    # LLM (pluggable via LiteLLM — model-independent: `llm_model` is any
+    # LiteLLM model string, e.g. "gpt-4o-mini", "anthropic/claude-3-5-sonnet",
+    # "azure/<deployment>", "ollama/llama3"). Disabled by default -> the
+    # extraction pipeline stays fully deterministic/heuristic/offline.
     llm_model: str = "gpt-4o-mini"
     llm_api_key: str = ""
+    llm_api_base: str = ""
+    llm_timeout_seconds: int = 30
     llm_enabled: bool = False
 
     # Orchestration engine selection
